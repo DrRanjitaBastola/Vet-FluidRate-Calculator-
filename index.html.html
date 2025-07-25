@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinary Fluid Therapy Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .calculator-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #4CAF50;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "🧮";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        input, select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .result {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2e7d32;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .formula-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #666;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .formula-info strong {
+            color: #17a2b8;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .tab.active {
+            background: white;
+            color: #4CAF50;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            color: #856404;
+        }
+
+        .warning::before {
+            content: "⚠️ ";
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Veterinary Fluid Therapy Calculator</h1>
+            <p>Essential calculations for veterinary fluid therapy management</p>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('maintenance')">Maintenance Fluids</div>
+                <div class="tab" onclick="showTab('dehydration')">Dehydration</div>
+                <div class="tab" onclick="showTab('shock')">Shock Fluids</div>
+                <div class="tab" onclick="showTab('ongoing')">Ongoing Losses</div>
+            </div>
+
+            <!-- Maintenance Fluids Tab -->
+            <div id="maintenance" class="tab-content active">
+                <div class="calculator-section">
+                    <h2 class="section-title">Daily Maintenance Fluid Requirements</h2>
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label for="weight-maintenance">Body Weight (kg)</label>
+                            <input type="number" id="weight-maintenance" step="0.1" min="0.1" placeholder="Enter weight">
+                        </div>
+                        <div class="input-field">
+                            <label for="species-maintenance">Species</label>
+                            <select id="species-maintenance">
+                                <option value="dog">Dog</option>
+                                <option value="cat">Cat</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateMaintenance()">Calculate Maintenance</button>
+                    <div id="maintenance-result" class="result"></div>
+                    <div class="formula-info">
+                        <strong>Formula:</strong> Dogs:30 × weight(kg) + 70 ml/day <br>
+                        <strong>Cats:</strong> 40 ml/kg/day
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dehydration Tab -->
+            <div id="dehydration" class="tab-content">
+                <div class="calculator-section">
+                    <h2 class="section-title">Dehydration Deficit Replacement</h2>
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label for="weight-dehydration">Body Weight (kg)</label>
+                            <input type="number" id="weight-dehydration" step="0.1" min="0.1" placeholder="Enter weight">
+                        </div>
+                        <div class="input-field">
+                            <label for="dehydration-percent">Dehydration Percentage (%)</label>
+                            <select id="dehydration-percent">
+                                <option value="5">5% - Mild (subtle skin tent)</option>
+                                <option value="7">7% - Mild (slight skin tent)</option>
+                                <option value="9">9% - Moderate (obvious skin tent)</option>
+                                <option value="10">10% - Moderate to severe</option>
+                                <option value="12">12% - Severe (skin tent stands)(Hypovolemic)</option>
+                                <option value="13">13% - Life-threatening(needs aggressive resuscitation)</option>
+                            </select>
+                        </div>
+                        <div class="input-field">
+                            <label for="replacement-time">Replacement Time (hours)</label>
+                            <select id="replacement-time">
+                                <option value="6">6 hours (severe cases)</option>
+                                <option value="12">12 hours (moderate cases)</option>
+                                <option value="24">24 hours (mild cases)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateDehydration()">Calculate Dehydration</button>
+                    <div id="dehydration-result" class="result"></div>
+                    <div class="formula-info">
+                        <strong>Formula:</strong> Fluid deficit (ml) = Body weight (kg) × Dehydration (%) × 10<br>
+                        <strong>Rate:</strong> Deficit ÷ Replacement time (hours)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shock Fluids Tab -->
+            <div id="shock" class="tab-content">
+                <div class="calculator-section">
+                    <h2 class="section-title">Shock Fluid Resuscitation</h2>
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label for="weight-shock">Body Weight (kg)</label>
+                            <input type="number" id="weight-shock" step="0.1" min="0.1" placeholder="Enter weight">
+                        </div>
+                        <div class="input-field">
+                            <label for="species-shock">Species</label>
+                            <select id="species-shock">
+                                <option value="dog">Dog</option>
+                                <option value="cat">Cat</option>
+                            </select>
+                        </div>
+                        <div class="input-field">
+                            <label for="shock-fraction">Shock Dose Fraction</label>
+                            <select id="shock-fraction">
+                                <option value="0.25">1/4 shock dose</option>
+                                <option value="0.5">1/2 shock dose</option>
+                                <option value="1">Full shock dose</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateShock()">Calculate Shock Dose</button>
+                    <div id="shock-result" class="result"></div>
+                    <div class="formula-info">
+                        <strong>Shock Dose:</strong> Dogs: 90 ml/kg | Cats: 40 ml/kg<br>
+                        <strong>Administration:</strong> Give over 15-30 minutes, reassess, repeat as needed
+                    </div>
+                    <div class="warning">
+                        Always reassess patient after each shock dose administration. Monitor for fluid overload.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ongoing Losses Tab -->
+            <div id="ongoing" class="tab-content">
+                <div class="calculator-section">
+                    <h2 class="section-title">Ongoing Loss Replacement</h2>
+                    <div class="input-group">
+                        <div class="input-field">
+                            <label for="vomiting-episodes">Vomiting Episodes (per day)</label>
+                            <input type="number" id="vomiting-episodes" min="0" placeholder="Number of episodes">
+                        </div>
+                        <div class="input-field">
+                            <label for="diarrhea-episodes">Diarrhea Episodes (per day)</label>
+                            <input type="number" id="diarrhea-episodes" min="0" placeholder="Number of episodes">
+                        </div>
+                        <div class="input-field">
+                            <label for="weight-ongoing">Body Weight (kg)</label>
+                            <input type="number" id="weight-ongoing" step="0.1" min="0.1" placeholder="Enter weight">
+                        </div>
+                    </div>
+                    <button class="calculate-btn" onclick="calculateOngoing()">Calculate Ongoing Losses</button>
+                    <div id="ongoing-result" class="result"></div>
+                    <div class="formula-info">
+                        <strong>Estimates:</strong> Vomiting: 4 ml/kg per episode | Diarrhea: 14 ml/kg per episode<br>
+                        <strong>Note:</strong> These are estimates - actual losses may vary significantly
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function calculateMaintenance() {
+            const weight = parseFloat(document.getElementById('weight-maintenance').value);
+            const species = document.getElementById('species-maintenance').value;
+            
+            if (!weight || weight <= 0) {
+                alert('Please enter a valid weight');
+                return;
+            }
+            
+            let dailyMl, mlPerHour;
+            
+            if (species === 'dog') {
+                dailyMl = (30 * weight) + 70;
+            } else {
+                dailyMl = 40 * weight; // Using average for cats
+            }
+            
+            mlPerHour = Math.round(dailyMl / 24);
+            
+            const result = document.getElementById('maintenance-result');
+            result.innerHTML = `
+                <strong>Daily Maintenance Requirement:</strong><br>
+                ${Math.round(dailyMl)} ml/day<br>
+                <strong>Hourly Rate:</strong> ${mlPerHour} ml/hour
+            `;
+            result.classList.add('show');
+        }
+
+        function calculateDehydration() {
+            const weight = parseFloat(document.getElementById('weight-dehydration').value);
+            const dehydrationPercent = parseFloat(document.getElementById('dehydration-percent').value);
+            const replacementTime = parseFloat(document.getElementById('replacement-time').value);
+            
+            if (!weight || weight <= 0) {
+                alert('Please enter a valid weight');
+                return;
+            }
+            
+            const deficit = weight * dehydrationPercent; // ml
+            const hourlyRate = Math.round(deficit / replacementTime);
+            
+            const result = document.getElementById('dehydration-result');
+            result.innerHTML = `
+                <strong>Total Fluid Deficit:</strong> ${Math.round(deficit)} ml<br>
+                <strong>Replacement Rate:</strong> ${hourlyRate} ml/hour over ${replacementTime} hours<br>
+                <strong>Plus maintenance fluids</strong>
+            `;
+            result.classList.add('show');
+        }
+
+        function calculateShock() {
+            const weight = parseFloat(document.getElementById('weight-shock').value);
+            const species = document.getElementById('species-shock').value;
+            const fraction = parseFloat(document.getElementById('shock-fraction').value);
+            
+            if (!weight || weight <= 0) {
+                alert('Please enter a valid weight');
+                return;
+            }
+            
+            const shockDosePerKg = species === 'dog' ? 90 : 40;
+            const totalShockDose = weight * shockDosePerKg * fraction;
+            
+            const result = document.getElementById('shock-result');
+            result.innerHTML = `
+                <strong>Shock Fluid Volume:</strong> ${Math.round(totalShockDose)} ml<br>
+                <strong>Administration:</strong> Give over 15-30 minutes<br>
+                <strong>Reassess patient and repeat if needed. EndPoints: HR, Temperature, BP, Pulse quality, CRT, Mentation, RR,Improved Lactate </strong>
+            `;
+            result.classList.add('show');
+        }
+
+        function calculateOngoing() {
+            const vomiting = parseInt(document.getElementById('vomiting-episodes').value) || 0;
+            const diarrhea = parseInt(document.getElementById('diarrhea-episodes').value) || 0;
+            const weight = parseFloat(document.getElementById('weight-ongoing').value);
+            
+            if (!weight || weight <= 0) {
+                alert('Please enter a valid weight');
+                return;
+            }
+            
+            const vomitingLoss = vomiting * 4 * weight; // 4 ml/kg per episode
+            const diarrheaLoss = diarrhea * 14 * weight; // 14 ml/kg per episode
+            const totalLoss = vomitingLoss + diarrheaLoss;
+            const hourlyRate = Math.round(totalLoss / 24);
+            
+            const result = document.getElementById('ongoing-result');
+            result.innerHTML = `
+                <strong>Estimated Daily Ongoing Losses:</strong><br>
+                Vomiting: ${Math.round(vomitingLoss)} ml<br>
+                Diarrhea: ${Math.round(diarrheaLoss)} ml<br>
+                <strong>Total: ${Math.round(totalLoss)} ml/day</strong><br>
+                <strong>Hourly Rate:</strong> ${hourlyRate} ml/hour<br>
+                <strong>Add to maintenance + deficit replacement</strong>
+            `;
+            result.classList.add('show');
+        }
+    </script>
+</body>
+</html>
