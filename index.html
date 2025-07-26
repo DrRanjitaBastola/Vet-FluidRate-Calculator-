@@ -482,15 +482,16 @@
                 return;
             }
             
-            const deficit = weight * dehydrationPercent; // ml
-            const hourlyRate = Math.round(deficit / replacementTime);
+           const deficit = Math.round(weight * dehydrationPercent * 10); // ml
+           const hourlyRate = Math.round(deficit / replacementTime);
             
             const result = document.getElementById('dehydration-result');
             result.innerHTML = `
-                <strong>Total Fluid Deficit:</strong> ${Math.round(deficit)} ml<br>
-                <strong>Replacement Rate:</strong> ${hourlyRate} ml/hour over ${replacementTime} hours<br>
-                <strong>Plus maintenance fluids</strong>
-            `;
+                result.innerHTML = `
+    <strong>Total Fluid Deficit:</strong> ${deficit} ml<br>
+    <strong>Replacement Rate:</strong> ${hourlyRate} ml/hour over ${replacementTime} hours<br>
+    <strong>Plus maintenance fluids</strong>
+`;
             result.classList.add('show');
         }
 
