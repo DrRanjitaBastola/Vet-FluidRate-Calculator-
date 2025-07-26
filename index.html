@@ -506,6 +506,11 @@
             
             const shockDosePerKg = species === 'dog' ? 90 : 40;
             const totalShockDose = weight * shockDosePerKg * fraction;
+            console.log("Weight:", weight);
+            console.log("Species:", species);
+            console.log("Fraction:", fraction) 
+            console.log("ShockDosePerKg:", shockDosePerKg);
+            console.log("TotalShockDose:", totalShockDose);
             
             const result = document.getElementById('shock-result');
             result.innerHTML = `
