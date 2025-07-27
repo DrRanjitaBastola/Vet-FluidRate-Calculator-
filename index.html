@@ -252,17 +252,6 @@
             transition: all 0.3s ease;
             font-weight: 600;
         }
-        .tab {
-    flex: 1;
-    padding: 12px 20px;
-    text-align: center;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    font-size: 0.9em;
 
         .tab.active {
             background: white;
@@ -436,8 +425,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
     <!-- Anesthesia Fluids Tab -->
 <div id="anesthesia" class="tab-content">
     <div class="calculator-section">
@@ -458,7 +445,7 @@
 <div class="input-group">
     <div class="input-field">
         <label for="duration-anesthesia">Anesthesia Duration (hours)</label>
-        <input type="number" id="duration-anesthesia" step="0.5" min="0.5" placeholder="Enter duration">
+        <input type="number" id="duration-anesthesia" step="0.1" min="0.1" placeholder="Enter duration">
     </div>
 </div>
         </div>
