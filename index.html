@@ -252,18 +252,6 @@
             transition: all 0.3s ease;
             font-weight: 600;
         }
-        .tab {
-    flex: 1;
-    padding: 12px 20px;
-    text-align: center;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    font-size: 0.9em;
-}
 
         .tab.active {
             background: white;
@@ -443,22 +431,25 @@
 <div id="anesthesia" class="tab-content">
     <div class="calculator-section">
         <h2 class="section-title">Anesthesia Fluid Rate Calculator</h2>
-        <div class="input-group">
-            <div class="input-field">
-                <label for="weight-anesthesia">Body Weight (kg)</label>
-                <input type="number" id="weight-anesthesia" step="0.1" min="0.1" placeholder="Enter weight">
-            </div>
-            <div class="input-field">
-                <label for="species-anesthesia">Species</label>
-                <select id="species-anesthesia">
-                    <option value="dog">Dog</option>
-                    <option value="cat">Cat</option>
-                </select>
-            </div>
-            <div class="input-field">
-                <label for="duration-anesthesia">Anesthesia Duration (hours)</label>
-                <input type="number" id="duration-anesthesia" step="0.5" min="0.5" placeholder="Enter duration">
-            </div>
+       <div class="input-group">
+    <div class="input-field">
+        <label for="weight-anesthesia">Body Weight (kg)</label>
+        <input type="number" id="weight-anesthesia" step="0.1" min="0.1" placeholder="Enter weight">
+    </div>
+    <div class="input-field">
+        <label for="species-anesthesia">Species</label>
+        <select id="species-anesthesia">
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
+        </select>
+    </div>
+</div>
+<div class="input-group">
+    <div class="input-field">
+        <label for="duration-anesthesia">Anesthesia Duration (hours)</label>
+        <input type="number" id="duration-anesthesia" step="0.5" min="0.5" placeholder="Enter duration">
+    </div>
+</div>
         </div>
         <button class="calculate-btn" onclick="calculateAnesthesia()">Calculate Anesthesia Rate</button>
         <div id="anesthesia-result" class="result"></div>
