@@ -77,77 +77,7 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
-        } /* Mobile Responsiveness */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-    
-    .header {
-        padding: 20px 15px;
-    }
-    
-    .header h1 {
-        font-size: 1.8em;
-    }
-    
-    .content {
-        padding: 15px;
-    }
-    
-    .calculator-section {
-        padding: 15px;
-        margin-bottom: 15px;
-    }
-    
-    .input-group {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-    
-    .tabs {
-        flex-direction: column;
-        gap: 5px;
-    }
-    
-    .tab {
-        padding: 10px 15px;
-        font-size: 0.9em;
-    }
-    
-    .calculate-btn {
-        width: 100%;
-        padding: 12px 20px;
-        font-size: 1em;
-    }
-    
-    .section-title {
-        font-size: 1.2em;
-    }
-    
-    input, select {
-        padding: 10px;
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 480px) {
-    .header h1 {
-        font-size: 1.5em;
-    }
-    
-    .header p {
-        font-size: 0.9em;
-    }
-    
-    .container {
-        border-radius: 10px;
-    }
-    
-    .calculator-section {
-        border-radius: 10px;
-    }
-}
+        }
 
         .input-field {
             display: flex;
@@ -295,7 +225,6 @@
                 <div class="tab" onclick="showTab('dehydration')">Dehydration</div>
                 <div class="tab" onclick="showTab('shock')">Shock Fluids</div>
                 <div class="tab" onclick="showTab('ongoing')">Ongoing Losses</div>
-                <div class="tab" onclick="showTab('anesthesia')">Anesthesia Fluids</div>
             </div>
 
             <!-- Maintenance Fluids Tab -->
@@ -394,7 +323,7 @@
                         <strong>Administration:</strong> Give over 15-30 minutes, reassess, repeat as needed
                     </div>
                     <div class="warning">
-                        Always reassess patient after each shock dose administration. Monitor for fluid overload. It is NOT Recemmended to give full shock dose at once. Microboluses are for the win! 
+                        Always reassess patient after each shock dose administration. Monitor for fluid overload.
                     </div>
                 </div>
             </div>
@@ -425,41 +354,8 @@
                     </div>
                 </div>
             </div>
-    <!-- Anesthesia Fluids Tab -->
-<div id="anesthesia" class="tab-content">
-    <div class="calculator-section">
-        <h2 class="section-title">Anesthesia Fluid Rate Calculator</h2>
-       <div class="input-group">
-    <div class="input-field">
-        <label for="weight-anesthesia">Body Weight (kg)</label>
-        <input type="number" id="weight-anesthesia" step="0.1" min="0.1" placeholder="Enter weight">
-    </div>
-    <div class="input-field">
-        <label for="species-anesthesia">Species</label>
-        <select id="species-anesthesia">
-            <option value="dog">Dog</option>
-            <option value="cat">Cat</option>
-        </select>
-    </div>
-</div>
-<div class="input-group">
-    <div class="input-field">
-        <label for="duration-anesthesia">Anesthesia Duration (hours)</label>
-        <input type="number" id="duration-anesthesia" step="0.1" min="0.1" placeholder="Enter duration">
-    </div>
-</div>
-        </div>
-        <button class="calculate-btn" onclick="calculateAnesthesia()">Calculate Anesthesia Rate</button>
-        <div id="anesthesia-result" class="result"></div>
-        <div class="formula-info">
-            <strong>Formula:</strong> Dogs: 5 ml/kg/hr | Cats: 3 ml/kg/hr<br>
-            <strong>Note:</strong> For normovolemic, normotensive, well-hydrated animals only
-        </div>
-        <div class="warning">
-            Ensure patient is properly hydrated and hemodynamically stable before using these rates.
         </div>
     </div>
-</div>
 
     <script>
         function showTab(tabName) {
@@ -516,15 +412,15 @@
                 return;
             }
             
-           const deficit = Math.round(weight * dehydrationPercent * 10); // ml
-           const hourlyRate = Math.round(deficit / replacementTime);
+            const deficit = weight * dehydrationPercent; // ml
+            const hourlyRate = Math.round(deficit / replacementTime);
             
             const result = document.getElementById('dehydration-result');
             result.innerHTML = `
-            <strong>Total Fluid Deficit:</strong> ${deficit} ml<br>
-            <strong>Replacement Rate:</strong> ${hourlyRate} ml/hour over ${replacementTime} hours<br>
-            <strong>Plus maintenance fluids</strong>
-`;
+                <strong>Total Fluid Deficit:</strong> ${Math.round(deficit)} ml<br>
+                <strong>Replacement Rate:</strong> ${hourlyRate} ml/hour over ${replacementTime} hours<br>
+                <strong>Plus maintenance fluids</strong>
+            `;
             result.classList.add('show');
         }
 
@@ -540,8 +436,7 @@
             
             const shockDosePerKg = species === 'dog' ? 90 : 40;
             const totalShockDose = weight * shockDosePerKg * fraction;
-
-    
+            
             const result = document.getElementById('shock-result');
             result.innerHTML = `
                 <strong>Shock Fluid Volume:</strong> ${Math.round(totalShockDose)} ml<br>
@@ -577,33 +472,6 @@
             `;
             result.classList.add('show');
         }
-        function calculateAnesthesia() {
-    const weight = parseFloat(document.getElementById('weight-anesthesia').value);
-    const species = document.getElementById('species-anesthesia').value;
-    const duration = parseFloat(document.getElementById('duration-anesthesia').value);
-    
-    if (!weight || weight <= 0) {
-        alert('Please enter a valid weight');
-        return;
-    }
-    
-    if (!duration || duration <= 0) {
-        alert('Please enter a valid duration');
-        return;
-    }
-    
-    const ratePerHour = species === 'dog' ? 5 : 3; // ml/kg/hr
-    const hourlyVolume = weight * ratePerHour;
-    const totalVolume = hourlyVolume * duration;
-    
-    const result = document.getElementById('anesthesia-result');
-    result.innerHTML = `
-        <strong>Anesthesia Fluid Rate:</strong> ${hourlyVolume} ml/hour<br>
-        <strong>Total Volume for ${duration} hours:</strong> ${Math.round(totalVolume)} ml<br>
-        <strong>Rate per kg:</strong> ${ratePerHour} ml/kg/hr
-    `;
-    result.classList.add('show');
-}
     </script>
 </body>
 </html>
