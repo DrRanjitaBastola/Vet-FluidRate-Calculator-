@@ -295,6 +295,7 @@
                 <div class="tab" onclick="showTab('dehydration')">Dehydration</div>
                 <div class="tab" onclick="showTab('shock')">Shock Fluids</div>
                 <div class="tab" onclick="showTab('ongoing')">Ongoing Losses</div>
+                <div class="tab" onclick="showTab('anesthesia')">Anesthesia Fluids</div>
             </div>
 
             <!-- Maintenance Fluids Tab -->
@@ -426,6 +427,38 @@
             </div>
         </div>
     </div>
+    <!-- Anesthesia Fluids Tab -->
+<div id="anesthesia" class="tab-content">
+    <div class="calculator-section">
+        <h2 class="section-title">Anesthesia Fluid Rate Calculator</h2>
+        <div class="input-group">
+            <div class="input-field">
+                <label for="weight-anesthesia">Body Weight (kg)</label>
+                <input type="number" id="weight-anesthesia" step="0.1" min="0.1" placeholder="Enter weight">
+            </div>
+            <div class="input-field">
+                <label for="species-anesthesia">Species</label>
+                <select id="species-anesthesia">
+                    <option value="dog">Dog</option>
+                    <option value="cat">Cat</option>
+                </select>
+            </div>
+            <div class="input-field">
+                <label for="duration-anesthesia">Anesthesia Duration (hours)</label>
+                <input type="number" id="duration-anesthesia" step="0.5" min="0.5" placeholder="Enter duration">
+            </div>
+        </div>
+        <button class="calculate-btn" onclick="calculateAnesthesia()">Calculate Anesthesia Rate</button>
+        <div id="anesthesia-result" class="result"></div>
+        <div class="formula-info">
+            <strong>Formula:</strong> Dogs: 5 ml/kg/hr | Cats: 3 ml/kg/hr<br>
+            <strong>Note:</strong> For normovolemic, normotensive, well-hydrated animals only
+        </div>
+        <div class="warning">
+            Ensure patient is properly hydrated and hemodynamically stable before using these rates.
+        </div>
+    </div>
+</div>
 
     <script>
         function showTab(tabName) {
@@ -543,6 +576,33 @@
             `;
             result.classList.add('show');
         }
+        function calculateAnesthesia() {
+    const weight = parseFloat(document.getElementById('weight-anesthesia').value);
+    const species = document.getElementById('species-anesthesia').value;
+    const duration = parseFloat(document.getElementById('duration-anesthesia').value);
+    
+    if (!weight || weight <= 0) {
+        alert('Please enter a valid weight');
+        return;
+    }
+    
+    if (!duration || duration <= 0) {
+        alert('Please enter a valid duration');
+        return;
+    }
+    
+    const ratePerHour = species === 'dog' ? 5 : 3; // ml/kg/hr
+    const hourlyVolume = weight * ratePerHour;
+    const totalVolume = hourlyVolume * duration;
+    
+    const result = document.getElementById('anesthesia-result');
+    result.innerHTML = `
+        <strong>Anesthesia Fluid Rate:</strong> ${hourlyVolume} ml/hour<br>
+        <strong>Total Volume for ${duration} hours:</strong> ${Math.round(totalVolume)} ml<br>
+        <strong>Rate per kg:</strong> ${ratePerHour} ml/kg/hr
+    `;
+    result.classList.add('show');
+}
     </script>
 </body>
 </html>
