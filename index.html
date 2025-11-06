@@ -420,8 +420,8 @@
                     <button class="calculate-btn" onclick="calculateOngoing()">Calculate Ongoing Losses</button>
                     <div id="ongoing-result" class="result"></div>
                     <div class="formula-info">
-                        <strong>Estimates:</strong> Vomiting: 4 ml/kg per episode | Diarrhea: 14 ml/kg per episode<br>
-                        <strong>Note:</strong> These are estimates - actual losses may vary significantly
+                        <strong>Estimates:</strong> Vomiting: 4 ml/kg per episode | Diarrhea: 10 ml/kg per episode<br>
+                        <strong>Note:</strong> These are estimates - actual losses may vary significantly. Best to measure the loss by weighing soiled bed. 
                     </div>
                 </div>
             </div>
@@ -560,7 +560,7 @@
             }
             
             const vomitingLoss = vomiting * 4 * weight; // 4 ml/kg per episode
-            const diarrheaLoss = diarrhea * 14 * weight; // 14 ml/kg per episode
+            const diarrheaLoss = diarrhea * 10 * weight; // 10 ml/kg per episode
             const totalLoss = vomitingLoss + diarrheaLoss;
             const hourlyRate = Math.round(totalLoss / 24);
             
